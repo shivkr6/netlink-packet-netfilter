@@ -8,8 +8,7 @@
 
 use std::{net::Ipv4Addr, time::Duration};
 
-use byteorder::{ByteOrder, NetworkEndian};
-use netlink_packet_core::{NetlinkMessage, NetlinkPayload};
+use netlink_packet_core::{parse_u32_be, NetlinkMessage, NetlinkPayload};
 use netlink_packet_netfilter::{
     constants::*,
     nflog::{
@@ -103,12 +102,12 @@ fn main() {
 
                     for nla in get_packet_nlas(&rx_packet) {
                         if let PacketNla::Payload(payload) = nla {
-                            let src = Ipv4Addr::from(NetworkEndian::read_u32(
-                                &payload[12..],
-                            ));
-                            let dst = Ipv4Addr::from(NetworkEndian::read_u32(
-                                &payload[16..],
-                            ));
+                            let src = Ipv4Addr::from(
+                                parse_u32_be(&payload[12..]).unwrap(),
+                            );
+                            let dst = Ipv4Addr::from(
+                                parse_u32_be(&payload[16..]).unwrap(),
+                            );
                             println!("Packet from {} to {}", src, dst);
                             break;
                         }

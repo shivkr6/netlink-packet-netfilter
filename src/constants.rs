@@ -86,3 +86,16 @@ pub const NFULA_CT_INFO: u16 = libc::NFULA_CT_INFO as u16;
 
 pub const NFULNL_MSG_CONFIG: u8 = libc::NFULNL_MSG_CONFIG as u8;
 pub const NFULNL_MSG_PACKET: u8 = libc::NFULNL_MSG_PACKET as u8;
+
+pub(crate) const IPCTNL_MSG_CT_GET: u8 = 1;
+
+pub const IPPROTO_ICMP: u8 = libc::IPPROTO_ICMP as u8;
+pub const IPPROTO_IGMP: u8 = libc::IPPROTO_IGMP as u8;
+pub const IPPROTO_TCP: u8 = libc::IPPROTO_TCP as u8;
+pub const IPPROTO_UDP: u8 = libc::IPPROTO_UDP as u8;
+pub const IPPROTO_DCCP: u8 = libc::IPPROTO_DCCP as u8;
+pub const IPPROTO_GRE: u8 = libc::IPPROTO_GRE as u8;
+pub const IPPROTO_ICMPV6: u8 = libc::IPPROTO_ICMPV6 as u8;
+pub const IPPROTO_IPIP: u8 = libc::IPPROTO_IPIP as u8;
+pub const IPPROTO_SCTP: u8 = libc::IPPROTO_SCTP as u8;
+pub const IPPROTO_UDPLITE: u8 = libc::IPPROTO_UDPLITE as u8;
