@@ -88,7 +88,9 @@ pub const NFULNL_MSG_CONFIG: u8 = libc::NFULNL_MSG_CONFIG as u8;
 pub const NFULNL_MSG_PACKET: u8 = libc::NFULNL_MSG_PACKET as u8;
 
 pub(crate) const IPCTNL_MSG_CT_GET: u8 = 1;
+pub(crate) const IPCTNL_MSG_CT_DELETE: u8 = 2;
 
+// Can be used by the user for conntrack::nlas::ProtoTuple::Protocol(u8)
 pub const IPPROTO_ICMP: u8 = libc::IPPROTO_ICMP as u8;
 pub const IPPROTO_IGMP: u8 = libc::IPPROTO_IGMP as u8;
 pub const IPPROTO_TCP: u8 = libc::IPPROTO_TCP as u8;
@@ -99,3 +101,23 @@ pub const IPPROTO_ICMPV6: u8 = libc::IPPROTO_ICMPV6 as u8;
 pub const IPPROTO_IPIP: u8 = libc::IPPROTO_IPIP as u8;
 pub const IPPROTO_SCTP: u8 = libc::IPPROTO_SCTP as u8;
 pub const IPPROTO_UDPLITE: u8 = libc::IPPROTO_UDPLITE as u8;
+
+// Conntrack connection's status flags, from enum ip_conntrack_status. uapi/linux/netfilter/nf_conntrack_common.h
+// Can be used by the user for ConntrackNla::CtaStatus(u32)
+pub const IPS_EXPECTED: u32 = 1;
+pub const IPS_SEEN_REPLY: u32 = 1 << 1;
+pub const IPS_ASSURED: u32 = 1 << 2;
+pub const IPS_CONFIRMED: u32 = 1 << 3;
+pub const IPS_SRC_NAT: u32 = 1 << 4;
+pub const IPS_DST_NAT: u32 = 1 << 5;
+pub const IPS_NAT_MASK: u32 = IPS_DST_NAT | IPS_SRC_NAT;
+pub const IPS_SEQ_ADJUST: u32 = 1 << 6;
+pub const IPS_SRC_NAT_DONE: u32 = 1 << 7;
+pub const IPS_DST_NAT_DONE: u32 = 1 << 8;
+pub const IPS_NAT_DONE_MASK: u32 = IPS_DST_NAT_DONE | IPS_SRC_NAT_DONE;
+pub const STATUS_DYING: u32 = 1 << 9;
+pub const IPS_FIXED_TIMEOUT: u32 = 1 << 10;
+pub const IPS_TEMPLATE: u32 = 1 << 11;
+pub const IPS_UNTRACKED: u32 = 1 << 12;
+pub const IPS_HELPER: u32 = 1 << 13;
+pub const IPS_OFFLOAD: u32 = 1 << 14;

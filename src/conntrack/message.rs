@@ -3,7 +3,9 @@
 use crate::{
     buffer::NetfilterBuffer,
     conntrack::nlas::nla::ConntrackNla,
-    constants::{IPCTNL_MSG_CT_GET, NFNL_SUBSYS_CTNETLINK},
+    constants::{
+        IPCTNL_MSG_CT_DELETE, IPCTNL_MSG_CT_GET, NFNL_SUBSYS_CTNETLINK,
+    },
 };
 use netlink_packet_core::{
     DecodeError, DefaultNla, Emitable, Parseable, ParseableParametrized,
@@ -12,6 +14,7 @@ use netlink_packet_core::{
 #[derive(Debug, PartialEq, Eq, Clone)]
 pub enum ConntrackMessage {
     Get(Vec<ConntrackNla>),
+    Delete(Vec<ConntrackNla>),
     Other {
         message_type: u8,
         nlas: Vec<DefaultNla>,
@@ -24,6 +27,7 @@ impl ConntrackMessage {
     pub fn message_type(&self) -> u8 {
         match self {
             ConntrackMessage::Get(_) => IPCTNL_MSG_CT_GET,
+            ConntrackMessage::Delete(_) => IPCTNL_MSG_CT_DELETE,
             ConntrackMessage::Other { message_type, .. } => *message_type,
         }
     }
@@ -33,6 +37,7 @@ impl Emitable for ConntrackMessage {
     fn buffer_len(&self) -> usize {
         match self {
             ConntrackMessage::Get(nlas) => nlas.as_slice().buffer_len(),
+            ConntrackMessage::Delete(nlas) => nlas.as_slice().buffer_len(),
             ConntrackMessage::Other { nlas, .. } => {
                 nlas.as_slice().buffer_len()
             }
@@ -42,6 +47,7 @@ impl Emitable for ConntrackMessage {
     fn emit(&self, buffer: &mut [u8]) {
         match self {
             ConntrackMessage::Get(nlas) => nlas.as_slice().emit(buffer),
+            ConntrackMessage::Delete(nlas) => nlas.as_slice().emit(buffer),
             ConntrackMessage::Other { nlas, .. } => {
                 nlas.as_slice().emit(buffer)
             }
@@ -61,6 +67,11 @@ impl<'a, T: AsRef<[u8]> + ?Sized>
                 let nlas = buf
                     .parse_all_nlas(|nla_buf| ConntrackNla::parse(&nla_buf))?;
                 ConntrackMessage::Get(nlas)
+            }
+            IPCTNL_MSG_CT_DELETE => {
+                let nlas = buf
+                    .parse_all_nlas(|nla_buf| ConntrackNla::parse(&nla_buf))?;
+                ConntrackMessage::Delete(nlas)
             }
             _ => ConntrackMessage::Other {
                 message_type,
